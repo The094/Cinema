@@ -9,10 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 /**
- * 
- * Connexion a votre BDD locale ou à distance sur le serveur de l'ECE via le tunnel SSH
- * 
- * @author segado
+ * Connexion a la BDD du projet
  */
 public class Connexion {
 
@@ -38,8 +35,7 @@ public class Connexion {
     public ArrayList<String> requetesMaj = new ArrayList<>();
 
     /**
-     * Constructeur avec 3 paramètres : nom, login et password de la BDD locale
-     *
+     * Constructeur
      * @param nameDatabase
      * @param loginDatabase
      * @param passwordDatabase
@@ -52,50 +48,38 @@ public class Connexion {
 
         // url de connexion "jdbc:mysql://localhost:3305/usernameECE"
         String urlDatabase = "jdbc:mysql://localhost:3306/" + nameDatabase + "?autoReconnect=true&useSSL=false";
-       // String urlDatabase = "jdbc:mysql://localhost:3308/jps?characterEncoding=latin1";
 
         //création d'une connexion JDBC à la base 
         conn = DriverManager.getConnection(urlDatabase, loginDatabase, passwordDatabase);
 
-        // création d'un ordre SQL (statement)
+        // création d'un ordre SQL
         stmt = conn.createStatement();
     }
-
-
     /**
      * Méthode qui ajoute la table en parametre dans son ArrayList
-     *
      * @param table
      */
     public void ajouterTable(String table) {
         tables.add(table);
     }
-
     /**
-     * Méthode qui ajoute la requete de selection en parametre dans son
-     * ArrayList
-     *
+     * Méthode qui ajoute la requete de selection
      * @param requete
      */
     public void ajouterRequete(String requete) {
         requetes.add(requete);
     }
-
     /**
-     * Méthode qui ajoute la requete de MAJ en parametre dans son
-     * ArrayList
-     *
+     * Méthode qui ajoute la requete de MAJ
      * @param requete
      */
     public void ajouterRequeteMaj(String requete) {
         requetesMaj.add(requete);
     }
-
     /**
      * Méthode qui retourne l'ArrayList des champs de la table en parametre
-     *
      * @param table
-     * @return
+     * @return 
      * @throws java.sql.SQLException
      */
     public ArrayList remplirChampsTable(String table) throws SQLException {
@@ -116,9 +100,6 @@ public class Connexion {
         for (int i = 0; i < nbColonne; i++) {
             champs = champs + " " + rsetMeta.getColumnLabel(i + 1);
         }
-
-        // ajouter un "\n" à la ligne des champs
-        //champs = champs + "\n";
 
         // ajouter les champs de la ligne dans l'ArrayList
         liste.add(champs);
@@ -156,22 +137,15 @@ public class Connexion {
             for (int i = 1; i < nbColonne; i++) {
                 champs = champs + "," + rset.getString(i + 1);
             }
-
-            // ajouter un "\n" à la ligne des champs
-            //champs = champs + "\n";
-
             // ajouter les champs de la ligne dans l'ArrayList
             liste.add(champs);
         }
-
         // Retourner l'ArrayList
         return liste;
     }
 
     /**
      * Méthode qui execute une requete de MAJ en parametre
-     * @param requeteMaj
-     * @throws java.sql.SQLException
      */
     public void executeUpdate(String requeteMaj) throws SQLException {
         stmt.executeUpdate(requeteMaj);
